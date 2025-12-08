@@ -20,7 +20,7 @@ from processing.sound import SoundFile, Waveform, Amplitude, FFT
 #4 If statements : used to for spawning cubes from the directions depending on the amp of the song
 #5 Lists : used for song dictionaries that include their titles, cover and background image, color, and amp range
 #6 Interactivity : the code reacts to the users inputs of the space bar aswell as b which pause or unpause the music and go back to the selection menu.
-#7 Sound : i created a waveform that reacts to the songs bass(FFT)
+#7 Sound : i created a waveform that reacts to the songs amplitude aswell as cubes spawning to the amp of the music.
 #testing : during the creation of my code i tested alot of different amp readings base of what i was getting from print(amp) until i was happy with the  the spawning of the cubes. i also tested a few different songs but some of them had amps that were similair for a good bit of the song which made it really boring when spawning the cubes.
 
 #songdictionary
@@ -28,7 +28,7 @@ songs = [
     {"title": "Pierce the Veil - Circles", "file": "Circles.mp3", "cover": "Circles.png", "back": "pierceback.jpeg","amp_ranges": [0.21, 0.245, 0.275], "color": [255, 0, 0]},
     {"title": "Origami Angels - 666 flags", "file": "666.mp3", "cover": "city.png", "back": "origamiback.jpg","amp_ranges": [0.22, 0.25, 0.28], "color": [255, 100, 0]},
     {"title": "Title Fight - Numb but i still feel it", "file": "Numb.mp3", "cover": "floralg.png", "back": "TTback.jpg","amp_ranges": [0.2, 0.23, 0.26], "color": [0, 100, 0]},
-    {"title": "Hatsune Miky and Kasane Teto - Mesmirizer", "file": "tetomiku.mp3", "cover": "mesmirize.jpg", "back": "mtback.jpg","amp_ranges": [0.2, 0.25, 0.28], "color": [128, 0, 128]},
+    {"title": "Hatsune Miku and Kasane Teto - Mesmirizer", "file": "tetomiku.mp3", "cover": "mesmirize.jpg", "back": "mtback.jpg","amp_ranges": [0.2, 0.25, 0.28], "color": [128, 0, 128]},
 
 ]
 #soundstuff
@@ -50,7 +50,7 @@ background_img = []
 #Cubeandplayerstats [] -- {]
 spawn_interval = 60
 square_size = 40
-speed = 7.5
+speed =  10
 hit_radius = 25
 score = 0
 notes = []
@@ -177,17 +177,6 @@ def load_song(index):
     waveform.input(soundfile)
     fft = FFT(py5.get_current_sketch(), 512)
     fft.input(soundfile)
-#playnextsong
-def next_song():
-    global current_index
-    current_index = (current_index + 1) % len(songs)
-    load_song(current_index)
-
-#playprevioussong
-def previous_song():
-    global current_index
-    current_index = (current_index - 1) % len(songs)
-    load_song(current_index)
 
 
 def spawn_note():
@@ -281,10 +270,10 @@ def draw_player():
     c1, c2, c3 = songs[current_index]["color"]
     py5.fill(c1, c2, c3)
     py5.stroke(0)
-    py5.text(songs[current_index]['title'], py5.width/2, 60)
+    py5.text(songs[current_index]['title'], py5.width/2, 60)    
     py5.image(base, (900 - 100) / 2, (900 - 100) / 2)
     #waveform
-    if waveform and amplitude and soundfile:
+    if waveform and amplitude and soundfile :
     #color
         cube_color = songs[current_index]["color"]
         py5.stroke(*cube_color)
@@ -296,7 +285,7 @@ def draw_player():
         scale = 100             # how far the circle reacts to sound
     
     #updateampandwaveform
-        fft.analyze()
+        amplitude.analyze()
         if not paused:
             waveform.analyze()
     
